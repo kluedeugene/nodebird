@@ -1,9 +1,9 @@
 const Sequelize = require('sequelize');
 const env = process.env.NODE_ENV || 'development';
 const config = require('../config/config')[env]; //config.json 안의 development를 불러온다.
-const User = require('/user');
-const Post = require('/post');
-const Hashtag = require('/hashtag');
+const User = require('./user');
+const Post = require('./post');
+const Hashtag = require('./hashtag');
 
 const db = {};
 const sequelize = new Sequelize(config.database, config.username, config.password, config);

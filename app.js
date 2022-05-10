@@ -8,6 +8,7 @@ const dotenv = require('dotenv');
 
 dotenv.config(); //dotenv는 최대한 위에 해야 밑에부터적용된다.
 const pageRouter = require('./routes/page');
+const { sequelize } = require('./models'); //sequelize를 불러온다.
 
 const app = express();
 app.set('port', process.env.PORT || 8001);
@@ -16,6 +17,15 @@ nunjucks.configure('views', {
 	express: app,
 	watch: true
 });
+sequelize
+	.sync({ force: false }) //sequelize를 동기화한다.	force:true는 테이블 삭제후 다시 생성->데이터날라감(테이블 수정시 사용 실무에선 금지)
+	// alter:true는 데이터 유지, 테이블컬럼 변경 반영해준다. 그러나 컬럼과 기존데이터 싱크 에러 발생할때가잇다.
+	.then(() => {
+		console.log('데이터베이스 연결 성공');
+	})
+	.catch((err) => {
+		console.error(err);
+	});
 
 app.use(morgan('dev'));
 app.use(express.static(path.join(__dirname, 'public')));
