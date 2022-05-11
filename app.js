@@ -8,6 +8,7 @@ const dotenv = require('dotenv');
 
 dotenv.config(); //dotenv는 최대한 위에 해야 밑에부터적용된다.
 const pageRouter = require('./routes/page');
+const authRouter = require('./routes/auth');
 const { sequelize } = require('./models'); //sequelize를 불러온다.
 
 const app = express();
@@ -45,6 +46,7 @@ app.use(
 );
 
 app.use('/', pageRouter);
+app.use('/auth', authRouter);
 
 app.use((req, res, next) => {
 	const error = new Error(`${req.method} ${req.url} 라우터가 없습니다.`);
