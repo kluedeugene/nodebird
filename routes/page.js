@@ -14,7 +14,8 @@ router.get('/', (req, res, next) => {
 	const twits = [];
 	res.render('main', {
 		title: 'NodeBird',
-		twits
+		twits,
+		user: req.user
 	});
 });
 module.exports = router;
