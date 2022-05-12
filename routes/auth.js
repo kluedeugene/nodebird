@@ -1,7 +1,8 @@
 const express = require('express');
 const bcrypt = require('bcrypt');
-const User = require('../models/user');
+const passport = require('passport');
 const { isLoggedIn, isNotLoggedIn } = require('./middlewares');
+const User = require('../models/user');
 
 const router = express.Router();
 
@@ -53,5 +54,18 @@ router.get('/logout', isLoggedIn, (req, res) => {
 	req.session.destroy();
 	res.redirect('/');
 });
+
+router.get('/kakao', passport.authenticate('kakao')); // 카카오로그인버튼-> 카카오홈페이지로 연결되어 로그인인증
+//-> 카카오가 /kakao/callback으로 한번더 요청
+router.get(
+	'/kakao/callback',
+	passport.authenticate('kakao', {
+		// 그뒤 kakaoStrategy 에서 검사 -> 성공 실패
+		failureRedirect: '/'
+	}),
+	(req, res) => {
+		res.redirect('/');
+	}
+);
 
 module.exports = router;
