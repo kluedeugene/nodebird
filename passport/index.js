@@ -1,7 +1,7 @@
 const passport = require('passport');
 const local = require('./localStrategy');
 const kakao = require('./kakaoStrategy');
-const User = require('../modules/user');
+const User = require('../models/user');
 
 module.exports = () => {
 	//auth.js의 return req.login 에서 user 객체를 받음
@@ -20,4 +20,5 @@ module.exports = () => {
 
 	local(); //등록
 	kakao(); //등록
+	// APP.JS에서 만든 모듈을 호출 해줘야 연결이 된다 연결 안될시	Unknown authentication strategy "local" 에러 뜬다.
 };
