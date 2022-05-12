@@ -5,6 +5,7 @@ const path = require('path');
 const session = require('express-session');
 const nunjucks = require('nunjucks');
 const dotenv = require('dotenv');
+const passport = require('passport');
 
 dotenv.config(); //dotenv는 최대한 위에 해야 밑에부터적용된다.
 const pageRouter = require('./routes/page');
@@ -44,6 +45,10 @@ app.use(
 		}
 	})
 );
+//express세션  밑에서 작성해야한다. 세션으로부터 데이터를 받아야하기때문 ,
+// 로그인 이후 그다음 요청부터 passport.session이 실행될때 deserializeUser가 실행된다.
+app.use(passport.initialize());
+app.use(passport.session());
 
 app.use('/', pageRouter);
 app.use('/auth', authRouter);
