@@ -1,6 +1,7 @@
 const express = require('express');
 const bcrypt = require('bcrypt');
 const User = require('../models/user');
+const { isLoggedIn, isNotLoggedIn } = require('./middlewares');
 
 const router = express.Router();
 
@@ -47,7 +48,7 @@ router.post('/login', isNotLoggedIn, (req, res, next) => {
 	})(req, res, next); //미들웨어 안의 미들웨어에는 (req,res,next)를 붙인다.
 });
 
-router.get('/logout', (req, res) => {
+router.get('/logout', isLoggedIn, (req, res) => {
 	req.logout();
 	req.session.destroy();
 	res.redirect('/');
