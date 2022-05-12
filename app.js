@@ -11,6 +11,7 @@ dotenv.config(); //dotenv는 최대한 위에 해야 밑에부터적용된다.
 const pageRouter = require('./routes/page');
 const authRouter = require('./routes/auth');
 const { sequelize } = require('./models'); //sequelize를 불러온다.
+const passportConfig = require('./passport');
 
 const app = express();
 app.set('port', process.env.PORT || 8001);
@@ -28,6 +29,7 @@ sequelize
 	.catch((err) => {
 		console.error(err);
 	});
+passportConfig();
 
 app.use(morgan('dev'));
 app.use(express.static(path.join(__dirname, 'public')));
