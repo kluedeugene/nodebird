@@ -10,6 +10,7 @@ const passport = require('passport');
 dotenv.config(); //dotenv는 최대한 위에 해야 밑에부터적용된다.
 const pageRouter = require('./routes/page');
 const authRouter = require('./routes/auth');
+const postRouter = require('./routes/post');
 const { sequelize } = require('./models'); //sequelize를 불러온다.
 const passportConfig = require('./passport');
 
@@ -33,6 +34,7 @@ passportConfig();
 
 app.use(morgan('dev'));
 app.use(express.static(path.join(__dirname, 'public')));
+app.use('/img', express.static(path.join(__dirname, 'uploads'))); //img경로로 요청하지만 실제로는 uploads폴더의 파일로 응답
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser(process.env.COOKIE_SECRET));
@@ -54,6 +56,7 @@ app.use(passport.session());
 
 app.use('/', pageRouter);
 app.use('/auth', authRouter);
+app.use('/post', postRouter);
 
 app.use((req, res, next) => {
 	const error = new Error(`${req.method} ${req.url} 라우터가 없습니다.`);
