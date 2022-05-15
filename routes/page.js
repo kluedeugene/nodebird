@@ -6,9 +6,9 @@ const router = express.Router();
 router.use((req, res, next) => {
 	//미들웨어의 특성을 이용한 변수중복 제거
 	res.locals.user = req.user;
-	res.locals.followCount = 0;
-	res.locals.followerCount = 0;
-	res.locals.followerIdList = [];
+	res.locals.followingCount = req.user ? req.user.Followers.length : 0;
+	res.locals.followerCount = req.user ? req.user.Followings.length : 0;
+	res.locals.followerIdList = req.user ? req.user.Followings.map((f) => f.id) : [];
 	next();
 });
 

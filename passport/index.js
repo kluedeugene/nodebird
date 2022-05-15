@@ -13,7 +13,21 @@ module.exports = () => {
 
 	//passport.session으로 id값을 알아낸뒤 그값을 deserializeUser에서 사용함
 	passport.deserializeUser((id, done) => {
-		User.findOne({ where: { id } }) //id의 유저를 찾아서
+		User.findOne({
+			where: { id },
+			include: [
+				{
+					model: User,
+					attributes: ['id', 'nick'],
+					as: 'Followers' //model이 User로 겹치니 as로 정의해주어야한다.
+				},
+				{
+					model: User,
+					attributes: ['id', 'nick'],
+					as: 'Followings' //model이 User로 겹치니 as로 정의해주어야한다.
+				}
+			]
+		}) //id의 유저를 찾아서
 			.then((user) => done(null, user)) //user의 전체 정보를 복구 -> req.user로 접근 가능
 			.catch((err) => done(err));
 	});
