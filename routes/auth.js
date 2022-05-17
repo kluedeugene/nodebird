@@ -34,7 +34,7 @@ router.post('/login', isNotLoggedIn, (req, res, next) => {
 			return next(authError);
 		}
 		if (!user) {
-			return res.redirect('/?loginError=${info.message}');
+			return res.redirect(`/?loginError=${info.message}`);
 		}
 		return req.login(user, (loginError) => {
 			//로그인 성공시 index.js의 serializer로 간다.

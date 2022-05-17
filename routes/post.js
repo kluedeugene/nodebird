@@ -36,6 +36,8 @@ router.post('/img', isLoggedIn, upload.single('img'), (req, res) => {
 
 const upload2 = multer();
 //body만 업로드하기때문에 none()
+
+//FIXME: 같은 해시태그를 한 게시글에서 여러번 작성하면 기본키 중복 오류가 발생..?
 router.post('/', isLoggedIn, upload2.none(), async (req, res, next) => {
 	try {
 		const post = await Post.create({
@@ -43,7 +45,8 @@ router.post('/', isLoggedIn, upload2.none(), async (req, res, next) => {
 			img: req.body.url,
 			UserId: req.user.id
 		});
-		const hashtags = req.body.content.match(/#[^\s#]*/g);
+		const hashtags = req.body.content.match(/#[^\s#]*/g); //정규표현식. #으로시작, 띄어쓰기, #이 아닌 것들을 골라라 g= 모두
+		//[[해시태그, false],[해시태그, true]]
 		if (hashtags) {
 			const result = await Promise.all(
 				hashtags.map((tag) => {
@@ -52,7 +55,9 @@ router.post('/', isLoggedIn, upload2.none(), async (req, res, next) => {
 					});
 				})
 			);
-			await post.addHashtags(result.map((r) => r[0]));
+			console.log(result);
+			await post.addHashtags(result.map((r) => r[0])); //첫번째 요소(해시태그)만 꺼내서 add
+			//addHasgtags([해시태그,해시태그])
 		}
 		res.redirect('/');
 	} catch (error) {

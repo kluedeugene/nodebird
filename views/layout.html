@@ -14,17 +14,21 @@
 					{% if user and user.id %}
 					<div class="user-name">{{'안녕하세요! ' + user.nick + '님'}}</div>
 					<div class="half">
-						<div>팔로잉</div>
+						<div>팔로워</div>
 						<div class="count following-count">{{followingCount}}</div>
 					</div>
 					<div class="half">
-						<div>팔로워</div>
+						<div>팔로우</div>
 						<div class="count follower-count">{{followerCount}}</div>
 					</div>
 					<input id="my-id" type="hidden" value="{{user.id}}" />
+					<a id="home" href="/" class="btn">메인페이지</a>
 					<a id="my-profile" href="/profile" class="btn">내 프로필</a>
+					<a id="my-post" href="/mypost" class="btn">내 게시물</a>
 					<a id="logout" href="/auth/logout" class="btn">로그아웃</a>
-					{% else %}
+					//만약 주소가 profile이라면 {% if %}
+					<a id="profilemodify" href="/profile/modify" class="btn">프로필수정</a>
+					{% endif %} {% else %}
 					<form id="login-form" action="/auth/login" method="post">
 						<div class="input-group">
 							<label for="email">이메일</label>
