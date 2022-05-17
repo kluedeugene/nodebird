@@ -37,4 +37,14 @@ router.post('/:id/unfollow', isLoggedIn, async (req, res, next) => {
 	}
 });
 
+//닉네임수정
+router.post('/profile', isLoggedIn, async (req, res, next) => {
+	try {
+		await User.update({ nick: req.body.nick }, { where: { id: req.user.id } });
+		res.redirect('/profile');
+	} catch (error) {
+		console.log(error);
+		next(error);
+	}
+});
 module.exports = router;

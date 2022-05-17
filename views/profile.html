@@ -13,4 +13,7 @@
 		{% endfor %} {% endif %}
 	</div>
 </div>
+<div class="profile-modify">
+	<form action="/user/profile" method="post"><input id="modify-nick" type="text" name="nick" /><button id="join-btn" type="submit" class="btn">닉네임수정</button></form>
+</div>
 {% endblock %}
