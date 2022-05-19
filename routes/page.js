@@ -5,10 +5,13 @@ const { isLoggedIn } = require('./middlewares');
 
 router.use((req, res, next) => {
 	//미들웨어의 특성을 이용한 변수중복 제거
+	//console.log('--------req.user-----------------------', req.user);
+	//console.log('--------req.body-----------------------', req.body);
 	res.locals.user = req.user;
-	res.locals.followingCount = req.user ? req.user.Followers.length : 0;
+	res.locals.followingCount = req.user ? req.user.Followers.length : 0; //req.user가있다면(로그인했다면)
 	res.locals.followerCount = req.user ? req.user.Followings.length : 0;
 	res.locals.followerIdList = req.user ? req.user.Followings.map((f) => f.id) : [];
+	//res.locals.likesList = req.user ? req.body.Liker.map((l) => l.id) : [];
 	next();
 });
 
@@ -25,15 +28,27 @@ router.get('/', async (req, res, next) => {
 		const posts = await Post.findAll({
 			//업로드한 게시물을 찾고
 			include: {
+				//작성자 정보
 				model: User,
 				attributes: ['id', 'nick']
 			},
+			include: {
+				//좋아요 누른사람들의 정보를 요청할시
+				model: User,
+				attributes: ['id', 'nick'],
+				as: 'Liker'
+			},
 			order: [['createdAt', 'DESC']]
 		});
+		//TODO: 여기까지 진행
+		console.log('-----posts0------------------', posts[0].Liker[0].id);
+		console.log('-----posts1------------------', posts[0].Liker[1].id);
+		console.log('-----Liker.length------------------', posts[0].Liker.length);
+
 		res.render('main', {
 			title: 'NodeBird',
 			twits: posts //찾은 게시글을 twits로 넣어줌
-			// user: req.user		//res.locals로 빼줄수있다.
+			//likes: posts.Liker.map((v) => v.map((v) => v.id)).includes(req.user.id)
 		});
 	} catch (err) {
 		console.log(err);

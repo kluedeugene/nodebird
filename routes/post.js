@@ -55,11 +55,33 @@ router.post('/', isLoggedIn, upload2.none(), async (req, res, next) => {
 					});
 				})
 			);
-			console.log(result);
+			//console.log(result);
 			await post.addHashtags(result.map((r) => r[0])); //첫번째 요소(해시태그)만 꺼내서 add
 			//addHasgtags([해시태그,해시태그])
 		}
 		res.redirect('/');
+	} catch (error) {
+		console.error(error);
+		next(error);
+	}
+});
+
+router.post('/:id/like', isLoggedIn, async (req, res, next) => {
+	try {
+		const post = await Post.findOne({ where: { id: req.params.id } }); //find post by id
+		await post.addLiker(req.user.id); //add liker to post
+		res.send('OK');
+	} catch (error) {
+		console.error(error);
+		next(error);
+	}
+});
+
+router.delete('/:id/like', isLoggedIn, async (req, res, next) => {
+	try {
+		const post = await Post.findOne({ where: { id: req.params.id } }); //find post by id
+		await post.removeLiker(req.user.id); //delete liker to post
+		res.send('OK');
 	} catch (error) {
 		console.error(error);
 		next(error);

@@ -32,6 +32,10 @@
 			<button class="twit-follow">팔로우하기</button>
 			{% elif followerIdList.includes(twit.User.id) and twit.User.id !== user.id %}
 			<button class="twit-unfollow">언팔로우하기</button>
+			{% endif %} {% if twit.Liker and twit.Liker.includes(twit.User.id) %}
+			<button class="unlike">좋아요 취소</button>
+			{% else %}
+			<button class="like">좋아요</button>
 			{% endif %}
 
 			<div class="twit-content">{{twit.content}}</div>
@@ -98,6 +102,48 @@
 							});
 					}
 				}
+			}
+		});
+	});
+
+	document.querySelectorAll('.like').forEach(function (tag) {
+		tag.addEventListener('click', function () {
+			const isLoggedIn = document.querySelector('#my-id');
+
+			const twitId = tag.parentNode.querySelector('.twit-id').value;
+
+			if (isLoggedIn) {
+				axios
+					.post(`/post/${twitId}/like`)
+
+					.then(() => {
+						location.reload();
+					})
+
+					.catch((error) => {
+						console.error(error);
+					});
+			}
+		});
+	});
+
+	document.querySelectorAll('.unlike').forEach(function (tag) {
+		tag.addEventListener('click', function () {
+			const isLoggedIn = document.querySelector('#my-id');
+
+			const twitId = tag.parentNode.querySelector('.twit-id').value;
+
+			if (isLoggedIn) {
+				axios
+					.delete(`/post/${twitId}/like`)
+
+					.then(() => {
+						location.reload();
+					})
+
+					.catch((error) => {
+						console.error(error);
+					});
 			}
 		});
 	});
