@@ -5,13 +5,11 @@ const { isLoggedIn } = require('./middlewares');
 
 router.use((req, res, next) => {
 	//미들웨어의 특성을 이용한 변수중복 제거
-	//console.log('--------req.user-----------------------', req.user);
-	//console.log('--------req.body-----------------------', req.body);
+
 	res.locals.user = req.user;
 	res.locals.followingCount = req.user ? req.user.Followers.length : 0; //req.user가있다면(로그인했다면)
 	res.locals.followerCount = req.user ? req.user.Followings.length : 0;
 	res.locals.followerIdList = req.user ? req.user.Followings.map((f) => f.id) : [];
-	//res.locals.likesList = req.user ? req.body.Liker.map((l) => l.id) : [];
 	next();
 });
 
@@ -40,15 +38,30 @@ router.get('/', async (req, res, next) => {
 			},
 			order: [['createdAt', 'DESC']]
 		});
-		//TODO: 여기까지 진행
-		console.log('-----posts0------------------', posts[0].Liker[0].id);
-		console.log('-----posts1------------------', posts[0].Liker[1].id);
-		console.log('-----Liker.length------------------', posts[0].Liker.length);
+		//각각의 포스트들에 대해서 로그인된 유저의 좋아요상태 체크, 라이커 카운트
+		posts.forEach((post) => {
+			if (req.user) {
+				post.liked = !!post.Liker?.find((v) => v.id === req.user.id);
+				post.likedCount = !!post.Liker ? post.Liker.length : 0;
+			} else {
+				post.likedCount = !!post.Liker ? post.Liker.length : 0;
+			}
+
+			// console.log('post.likedCount', post.likedCount);
+			// console.log('post.liked', !!post.Likers?.find((v) => v.id === post.User.id));
+			//	console.log(@local user id', res.locals.user.id);
+			// console.log('post.UserId', post.UserId);
+			// console.log('post.id', post.id);
+			// console.log('req.user.id', req.user.id);
+			// console.log('Find post.Liker.id', !!post.Liker?.find((v) => v.id === post.UserId));
+			// console.log('post.Liker.length', post.Liker.length ? post.Liker.length : 0);
+			// console.log('post.Liker.id', post.Liker[0].id);
+			// console.log('post.Liker', post.Liker);
+		});
 
 		res.render('main', {
 			title: 'NodeBird',
 			twits: posts //찾은 게시글을 twits로 넣어줌
-			//likes: posts.Liker.map((v) => v.map((v) => v.id)).includes(req.user.id)
 		});
 	} catch (err) {
 		console.log(err);

@@ -77,7 +77,7 @@ router.post('/:id/like', isLoggedIn, async (req, res, next) => {
 	}
 });
 
-router.delete('/:id/like', isLoggedIn, async (req, res, next) => {
+router.delete('/:id/unlike', isLoggedIn, async (req, res, next) => {
 	try {
 		const post = await Post.findOne({ where: { id: req.params.id } }); //find post by id
 		await post.removeLiker(req.user.id); //delete liker to post

@@ -32,11 +32,17 @@
 			<button class="twit-follow">팔로우하기</button>
 			{% elif followerIdList.includes(twit.User.id) and twit.User.id !== user.id %}
 			<button class="twit-unfollow">언팔로우하기</button>
-			{% endif %} {% if twit.Liker and twit.Liker.includes(twit.User.id) %}
+			{% endif %} {% if twit.liked %}
 			<button class="unlike">좋아요 취소</button>
-			{% else %}
+
+			{% elif user %}
 			<button class="like">좋아요</button>
-			{% endif %}
+			<!-- 좋아요 개수 보여주기 (로그인전 포함) -->
+			{% endif %} {% set likedCount= twit.likedCount %}
+			<span class="likecount">like:{{likedCount}}</span>
+			<script>
+				console.log('{{twit.id}},{{ twit.liked }},{{twit.likedCount}}');
+			</script>
 
 			<div class="twit-content">{{twit.content}}</div>
 			{% if twit.img %}
@@ -115,7 +121,6 @@
 			if (isLoggedIn) {
 				axios
 					.post(`/post/${twitId}/like`)
-
 					.then(() => {
 						location.reload();
 					})
@@ -135,7 +140,7 @@
 
 			if (isLoggedIn) {
 				axios
-					.delete(`/post/${twitId}/like`)
+					.delete(`/post/${twitId}/unlike`)
 
 					.then(() => {
 						location.reload();
