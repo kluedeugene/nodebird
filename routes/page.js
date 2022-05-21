@@ -25,32 +25,36 @@ router.get('/', async (req, res, next) => {
 	try {
 		const posts = await Post.findAll({
 			//업로드한 게시물을 찾고
-			include: {
-				//작성자 정보
-				model: User,
-				attributes: ['id', 'nick']
-			},
-			include: {
-				//좋아요 누른사람들의 정보를 요청할시
-				model: User,
-				attributes: ['id', 'nick'],
-				as: 'Liker'
-			},
+			include: [
+				{
+					//작성자 정보
+					model: User,
+					attributes: ['id', 'nick']
+				},
+				{
+					//좋아요 누른사람들의 정보를 요청할시
+					model: User,
+					attributes: ['id', 'nick'],
+					as: 'Liker'
+				}
+			],
 			order: [['createdAt', 'DESC']]
 		});
 		//각각의 포스트들에 대해서 로그인된 유저의 좋아요상태 체크, 라이커 카운트
 		posts.forEach((post) => {
 			if (req.user) {
 				post.liked = !!post.Liker?.find((v) => v.id === req.user.id);
+				post.liked = post.Liker?.find((v) => v.id === req.user.id);
 				post.likedCount = !!post.Liker ? post.Liker.length : 0;
 			} else {
 				post.likedCount = !!post.Liker ? post.Liker.length : 0;
 			}
-
 			// console.log('post.likedCount', post.likedCount);
 			// console.log('post.liked', !!post.Likers?.find((v) => v.id === post.User.id));
 			//	console.log(@local user id', res.locals.user.id);
 			// console.log('post.UserId', post.UserId);
+			console.log('post-----------------', post.User.id);
+
 			// console.log('post.id', post.id);
 			// console.log('req.user.id', req.user.id);
 			// console.log('Find post.Liker.id', !!post.Liker?.find((v) => v.id === post.UserId));

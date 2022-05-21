@@ -53,8 +53,6 @@ module.exports = class User extends Sequelize.Model {
 		});
 
 		db.User.belongsToMany(db.Post, {
-			//foreignKey: 'PostId',
-			//foreignKey: 'UserId',
 			through: 'Like'
 		});
 	}

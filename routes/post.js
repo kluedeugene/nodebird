@@ -66,6 +66,17 @@ router.post('/', isLoggedIn, upload2.none(), async (req, res, next) => {
 	}
 });
 
+router.delete('/:id/deletePost', isLoggedIn, async (req, res, next) => {
+	try {
+		await Post.destroy({ where: { id: req.params.id, UserId: req.user.id } }); //확인용 user id 체크
+		//res.redirect('/');
+		res.send('OK');
+	} catch (error) {
+		console.log(error);
+		next(error);
+	}
+});
+
 router.post('/:id/like', isLoggedIn, async (req, res, next) => {
 	try {
 		const post = await Post.findOne({ where: { id: req.params.id } }); //find post by id
